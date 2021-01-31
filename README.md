@@ -1,4 +1,4 @@
-# CPSC425: Computer Vision
+# CPSC425: Computer Vision (Spring 2020)
 
 ## Course Description
 Computer vision, broadly speaking, is a research field aimed to enable computers to process and interpret visual data, as sighted humans can. It is one of the most exciting areas of research in computing science and among the fastest growing technologies in today’s industry. This course provides an introduction to the fundamental principles and applications of computer vision.
