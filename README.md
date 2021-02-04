@@ -15,6 +15,7 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 - Denoising filters
 
 ### A2
-- Normalized cross-correlation
-- Object detection in a scaled representation
-- Pyramid-based image blending
+- Scaled representation
+- Object/face detection with normalized cross-correlation
+- Gaussian and Laplacian image pyramids
+- Image blending
