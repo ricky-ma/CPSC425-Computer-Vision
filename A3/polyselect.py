@@ -32,93 +32,96 @@ nothing other than your mouse.
 Written by Julieta, Jan 2015.
 '''
 
+
 class LineBuilder:
 
-	def __init__(self, line):
-		# Prepare for the first click.
-		self.line = line
-		self.first_click = True
-		# Add click listener
-		self.cid = self.line.figure.canvas.mpl_connect('button_press_event', self)
-		# Add close listener
-		self.xs = list()
-		self.ys = list()
+    def __init__(self, line):
+        # Prepare for the first click.
+        self.line = line
+        self.first_click = True
+        # Add click listener
+        self.cid = self.line.figure.canvas.mpl_connect('button_press_event', self)
+        # Add close listener
+        self.xs = list()
+        self.ys = list()
 
-	def __call__(self, event):
+    def __call__(self, event):
 
-		# Initialize with the first click.
-		if self.first_click:
-			self.first_click = False
-			self.xs.append( int(event.xdata) )
-			self.ys.append( int(event.ydata) )
-			self.line.set_data(self.xs, self.ys)
-			return
+        # Initialize with the first click.
+        if self.first_click:
+            self.first_click = False
+            self.xs.append(int(event.xdata))
+            self.ys.append(int(event.ydata))
+            self.line.set_data(self.xs, self.ys)
+            return
 
-		# Handle further clicks.
-		if event.inaxes!=self.line.axes: return
-		self.xs.append( int(event.xdata) )
-		self.ys.append( int(event.ydata) )
-		self.line.set_data(self.xs, self.ys)
-		self.line.figure.canvas.draw()
+        # Handle further clicks.
+        if event.inaxes != self.line.axes:
+            return
+        self.xs.append(int(event.xdata))
+        self.ys.append(int(event.ydata))
+        self.line.set_data(self.xs, self.ys)
+        self.line.figure.canvas.draw()
 
 
 # Function that handles closing the viewer
 def handle_close(event):
-	xs = event.canvas.figure.linebuilder.xs
-	ys = event.canvas.figure.linebuilder.ys
-	fillPolyPoint = list()
-	for i in range( len(xs) ):
-		fillPolyPoint.append( xs[i] )
-		fillPolyPoint.append( ys[i] )
+    xs = event.canvas.figure.linebuilder.xs
+    ys = event.canvas.figure.linebuilder.ys
+    fillPolyPoint = list()
+    for i in range(len(xs)):
+        fillPolyPoint.append(xs[i])
+        fillPolyPoint.append(ys[i])
 
-	assert len( fillPolyPoint ) >= 6, "A polygon requires at least 3 points"
-	img = Image.new('L', (ncols, nrows), 0)
-	ImageDraw.Draw(img).polygon(fillPolyPoint, outline=1, fill=1)
-	fillRegion = np.array(img, dtype=np.uint8)
+    assert len(fillPolyPoint) >= 6, "A polygon requires at least 3 points"
+    img = Image.new('L', (ncols, nrows), 0)
+    ImageDraw.Draw(img).polygon(fillPolyPoint, outline=1, fill=1)
+    fillRegion = np.array(img, dtype=np.uint8)
 
-	# Save the pickle
-	ff = open( fname, 'wb')
-	pickle.dump( fillRegion, ff, -1 )
-	ff.close()
+    # Save the pickle
+    ff = open(fname, 'wb')
+    pickle.dump(fillRegion, ff, -1)
+    ff.close()
 
-	print('Saved region to {0}!'.format( fname ))
+    print('Saved region to {0}!'.format(fname))
 
 
 # === Script execution starts here ===
 # imname is the name of the image file that you want to read.
-imname = 'donkey.jpg'
+imname = 'data/almafi.jpg'
 
 # === Read the image
-im = Image.open( imname ).convert('RGB')
-im_array = np.asarray( im, dtype=np.uint8 )
+im = Image.open(imname).convert('RGB')
+im_array = np.asarray(im, dtype=np.uint8)
 nrows, ncols, _ = im_array.shape
 
 print('Would you like to select the region to be filled (0) or the sample texture region (1)?')
 
 Zero_or_One = False
+answer = 0
 while not Zero_or_One:
-    answer = raw_input("0 or 1: ")
+    answer = input("0 or 1: ")
     if answer == "0" or answer == "1":
-            Zero_or_One = True
+        Zero_or_One = True
 
 if answer == "0":
-        fname = 'fill_region.pkl'
+    fname = 'data/fill_region_almafi.pkl'
 else:
-        fname  = 'texture_region.pkl'
-        print('Note: Code in Holefill.py forces the texture region to be rectangular')
+    fname = 'data/texture_region_almafi.pkl'
+    print('Note: Code in Holefill.py forces the texture region to be rectangular')
 
-print('Please use your mouse to specify the region that you want for {0}'.format( fname ))
+print('Please use your mouse to specify the region that you want for {0}'.format(fname))
 print('(Click to select each polygon vertex. Close the window to complete and save the polygon.)')
 
 # === Create display
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlim([ 0, ncols])
-ax.set_ylim([ 0, nrows])
+ax.set_xlim([0, ncols])
+ax.set_ylim([0, nrows])
 ax.invert_yaxis()
 
 # === Display the image
-ax.imshow( im_array )
+ax.imshow(im_array)
 ax.set_title('click to build line segments')
 
 # === Add listener for close event
@@ -128,4 +131,3 @@ line, = ax.plot([0], [0])  # empty line
 fig.linebuilder = LineBuilder(line)
 
 plt.show()
-
