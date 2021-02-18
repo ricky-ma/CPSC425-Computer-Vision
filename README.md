@@ -19,3 +19,6 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 - Object/face detection with normalized cross-correlation
 - Gaussian and Laplacian image pyramids
 - Image blending
+
+### A3
+- Texture synthesis
