@@ -25,7 +25,7 @@ def computeSSD(TODOPatch, TODOMask, textureIm, patchL):
     return SSD
 
 
-def copy_patch(imHole, TODOMask, textureIm, iPatchCenter, jPatchCenter, iMatchCenter, jMatchCenter, patchL):
+def copy_patch(imHole, TODOMask, textureIm, iPatchCenter, jPatchCenter, iMatchCenter, jMatchCenter, selectPatch, patchL):
     patchSize = 2 * patchL + 1
     for i in range(patchSize):
         for j in range(patchSize):
@@ -33,7 +33,8 @@ def copy_patch(imHole, TODOMask, textureIm, iPatchCenter, jPatchCenter, iMatchCe
             # the hole imHole for each pixel where TODOMask = 1.
             # The patch is centred on iPatchCenter, jPatchCenter in the image imHole
             if TODOMask[i, j] == 1:
-                imHole[i + iPatchCenter - int(patchSize/2), j + jPatchCenter - int(patchSize/2)] = selectPatch[i, j]
+                # imHole[i + iPatchCenter - patchL, j + jPatchCenter - patchL] = selectPatch[i - patchL, j - patchL]
+                imHole[i + iPatchCenter - patchL, j + jPatchCenter - patchL] = selectPatch[i, j]
     return imHole
 
 
@@ -74,11 +75,11 @@ def find_edge(hole_mask):
 #
 
 # Change patchL to change the patch size used (patch size is 2 *patchL + 1)
-patchL = 10
+patchL = 20
 patchSize = 2 * patchL + 1
 
 # Standard deviation for random patch selection
-randomPatchSD = 1
+randomPatchSD = 20
 
 # Display results interactively
 showResults = True
@@ -94,12 +95,12 @@ imRows, imCols, imBands = np.shape(im_array)
 #
 # Define hole and texture regions.  This will use files fill_region.pkl and
 #   texture_region.pkl, if both exist, otherwise user has to select the regions.
-if os.path.isfile('fill_region.pkl') and os.path.isfile('texture_region.pkl'):
-    fill_region_file = open('fill_region.pkl', 'rb')
+if os.path.isfile('data/fill_region_donkey.pkl') and os.path.isfile('data/texture_region_donkey.pkl'):
+    fill_region_file = open('data/fill_region_donkey.pkl', 'rb')
     fillRegion = pickle.load(fill_region_file)
     fill_region_file.close()
 
-    texture_region_file = open('texture_region.pkl', 'rb')
+    texture_region_file = open('data/texture_region_donkey.pkl', 'rb')
     textureRegion = pickle.load(texture_region_file)
     texture_region_file.close()
 else:
@@ -179,9 +180,9 @@ while nFill > 0:
 
         # Define the coordinates for the TODOPatch
         TODOPatch = imHole[iPatchCenter - patchL:iPatchCenter + patchL + 1,
-                    jPatchCenter - patchL:jPatchCenter + patchL + 1, :]
+                           jPatchCenter - patchL:jPatchCenter + patchL + 1, :]
         TODOMask = fillRegion[iPatchCenter - patchL:iPatchCenter + patchL + 1,
-                   jPatchCenter - patchL:jPatchCenter + patchL + 1]
+                              jPatchCenter - patchL:jPatchCenter + patchL + 1]
 
         #
         # Compute masked SSD of TODOPatch and textureIm
@@ -199,13 +200,13 @@ while nFill > 0:
         iSelectCenter = iSelectCenter + patchL
         jSelectCenter = jSelectCenter + patchL
         selectPatch = textureIm[iSelectCenter - patchL:iSelectCenter + patchL + 1,
-                      jSelectCenter - patchL:jSelectCenter + patchL + 1, :]
+                                jSelectCenter - patchL:jSelectCenter + patchL + 1, :]
 
         #
         # Copy patch into hole
         #
         imHole = copy_patch(imHole, TODOMask, textureIm, iPatchCenter, jPatchCenter,
-                            iSelectCenter, jSelectCenter, patchL)
+                            iSelectCenter, jSelectCenter, selectPatch, patchL)
 
         # Update TODORegion and fillRegion by removing locations that overlapped the patch
         TODORegion[iPatchCenter - patchL:iPatchCenter + patchL + 1, jPatchCenter - patchL:jPatchCenter + patchL + 1] = 0
