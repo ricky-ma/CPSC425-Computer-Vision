@@ -21,4 +21,11 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 - Image blending
 
 ### A3
-- Texture synthesis
+- Texture synthesis by non-parametric sampling
+- Hole filling using texture synthesis
+
+### A4
+- SIFT keypoint matching
+- RANSAC sampling and model fitting for noisy image data
+- Keypoint projections using homography matrices
+- Panorama stitching with RANSAC homography
