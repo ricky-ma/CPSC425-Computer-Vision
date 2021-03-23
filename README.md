@@ -29,3 +29,10 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 - RANSAC sampling and model fitting for noisy image data
 - Keypoint projections using homography matrices
 - Panorama stitching with RANSAC homography
+
+### A5
+- Bags of features: bag of words using SIFT descriptors
+- Clustering SIFT descriptors with K-means
+- Representing images as histograms of visual words
+- Scene recognition with KNNs
+- Scene recognition with 1-vs-all linear SVMs
