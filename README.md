@@ -36,3 +36,8 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 - Representing images as histograms of visual words
 - Scene recognition with KNNs
 - Scene recognition with 1-vs-all linear SVMs
+
+### A6
+- Implementing PyTorch layers from scratch (ReLU, MaxPool2d, Linear, Conv2d)
+- Experimenting w/ hyperparameters (epochs, channel sizes, hidden layers, activations)
+- Image segmentation with MaskRCNN
