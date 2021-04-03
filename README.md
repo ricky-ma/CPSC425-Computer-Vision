@@ -39,5 +39,5 @@ Computer vision, broadly speaking, is a research field aimed to enable computers
 
 ### A6
 - Implementing PyTorch layers from scratch (ReLU, MaxPool2d, Linear, Conv2d)
-- Experimenting w/ hyperparameters (epochs, channel sizes, hidden layers, activations)
+- CNN hyperparameter tuning (epochs, channel sizes, hidden layers, activations)
 - Image segmentation with MaskRCNN
